@@ -371,7 +371,9 @@ module ActiveRecord
         else
           im = arel_table.compile_insert(_substitute_values(values))
         end
-
+        puts "im [activerecord/persistence.rb:374]"
+        puts "calling connection.insert from _insert_record"
+        puts "args: #{im}, #{self} Create, #{primary_key || false}, #{primary_key_value}"
         connection.insert(im, "#{self} Create", primary_key || false, primary_key_value)
       end
 
