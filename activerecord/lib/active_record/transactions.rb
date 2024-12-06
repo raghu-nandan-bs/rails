@@ -299,7 +299,7 @@ module ActiveRecord
       # print super class
       puts super.class
       # with_transaction_returning_status { super }
-      { super }
+      super
     end
 
     def save!(**) #:nodoc:
