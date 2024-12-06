@@ -471,6 +471,7 @@ module ActiveRecord
     # Attributes marked as readonly are silently ignored if the record is
     # being updated.
     def save(**options, &block)
+      puts "calling create or update [activerecord/persistence.rb:474]"
       create_or_update(**options, &block)
     rescue ActiveRecord::RecordInvalid
       false
