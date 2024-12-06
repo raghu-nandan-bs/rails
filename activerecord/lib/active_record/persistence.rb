@@ -64,6 +64,7 @@ module ActiveRecord
       #
       # See <tt>ActiveRecord::Persistence#insert_all</tt> for documentation.
       def insert(attributes, returning: nil, unique_by: nil)
+        puts "insert [activerecord/persistence.rb:67]"
         insert_all([ attributes ], returning: returning, unique_by: unique_by)
       end
 
@@ -131,6 +132,7 @@ module ActiveRecord
       #
       # See <tt>ActiveRecord::Persistence#insert_all!</tt> for more.
       def insert!(attributes, returning: nil)
+        puts "insert! [activerecord/persistence.rb:134]"
         insert_all!([ attributes ], returning: returning)
       end
 

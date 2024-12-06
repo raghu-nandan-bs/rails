@@ -618,6 +618,7 @@ module ActiveRecord
         end
 
         def insert(fixture_sets, connection) # :nodoc:
+          puts "insert [activerecord/fixtures.rb:621]"
           fixture_sets_by_connection = fixture_sets.group_by do |fixture_set|
             if fixture_set.model_class
               fixture_set.model_class.connection
