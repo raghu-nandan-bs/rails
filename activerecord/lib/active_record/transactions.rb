@@ -295,6 +295,9 @@ module ActiveRecord
     end
 
     def save(**) #:nodoc:
+      puts "calling save [activerecord/transactions.rb:100]"
+      # print super class
+      puts super.class
       with_transaction_returning_status { super }
     end
 
