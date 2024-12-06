@@ -20,6 +20,7 @@ module Arel # :nodoc: all
     end
 
     def insert(fields)
+      puts "insert [arel/insert_manager.rb:23]"
       return if fields.empty?
 
       if String === fields
