@@ -298,7 +298,8 @@ module ActiveRecord
       puts "calling save [activerecord/transactions.rb:298]"
       # print super class
       puts super.class
-      with_transaction_returning_status { super }
+      # with_transaction_returning_status { super }
+      { super }
     end
 
     def save!(**) #:nodoc:
