@@ -158,6 +158,9 @@ module ActiveRecord
 
                 index = 0
                 while index < length
+                  puts "columns.inspect: #{columns.inspect}"
+                  puts "row.inspect: #{row.inspect}"
+
                   hash[columns[index]] = row[index]
                   index += 1
                 end
