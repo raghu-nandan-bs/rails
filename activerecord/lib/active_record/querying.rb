@@ -66,7 +66,6 @@ module ActiveRecord
         if result_set.includes_column?(inheritance_column)
           puts "|||||| result_set.includes_column?(inheritance_column)"
           puts "|||||| inheritance_column: #{inheritance_column}"
-          puts "|||||| record.inspect: #{record.inspect}"
           puts "|||||| column_types.inspect: #{column_types.inspect}"
           puts "|||||| block.inspect: #{block.inspect}"
 
@@ -74,7 +73,7 @@ module ActiveRecord
         else
           puts "|||||| instantiate_instance_of"
           puts "|||||| self.inspect: #{self.inspect}"
-          puts "|||||| record.inspect: #{record.inspect}"
+          puts "|||||| record.inspect: #{result_set.inspect}"
           puts "|||||| column_types.inspect: #{column_types.inspect}"
           puts "|||||| block.inspect: #{block.inspect}"
           # Instantiate a homogeneous set
