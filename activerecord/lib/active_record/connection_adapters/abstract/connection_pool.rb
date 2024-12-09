@@ -493,7 +493,7 @@ module ActiveRecord
       def disconnect(raise_on_acquisition_timeout = true)
         puts "::::::: disconnect"
         puts "::::::: @connections.inspect: #{@connections.inspect}"
-        puts "::::::: conn: #{conn.inspect}"
+        puts "::::::: @connection.inspect: #{@connection.inspect}"
         with_exclusively_acquired_all_connections(raise_on_acquisition_timeout) do
           synchronize do
             @connections.each do |conn|
