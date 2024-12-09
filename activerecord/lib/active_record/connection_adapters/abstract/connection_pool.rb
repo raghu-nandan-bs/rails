@@ -493,20 +493,25 @@ module ActiveRecord
       def disconnect(raise_on_acquisition_timeout = true)
         puts "::::::: disconnect"
         puts "::::::: @connections.inspect: #{@connections.inspect}"
-        puts "::::::: @connection.inspect: #{@connection.inspect}"
-        with_exclusively_acquired_all_connections(raise_on_acquisition_timeout) do
-          synchronize do
-            @connections.each do |conn|
-              if conn.in_use?
-                conn.steal!
-                checkin conn
-              end
-              conn.disconnect!
-            end
-            @connections = []
-            @available.clear
-          end
+
+        @connections.each do |conn|
+          puts "::::::: conn.inspect: #{conn.inspect}"
+          conn.connection.close
         end
+
+        # with_exclusively_acquired_all_connections(raise_on_acquisition_timeout) do
+        #   synchronize do
+        #     @connections.each do |conn|
+        #       if conn.in_use?
+        #         conn.steal!
+        #         checkin conn
+        #       end
+        #       conn.disconnect!
+        #     end
+        #     @connections = []
+        #     @available.clear
+        #   end
+        # end
       end
 
       # Disconnects all connections in the pool, and clears the pool.
