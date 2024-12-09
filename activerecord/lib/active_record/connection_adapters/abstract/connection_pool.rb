@@ -491,6 +491,9 @@ module ActiveRecord
       #   connections in the pool within a timeout interval (default duration is
       #   <tt>spec.db_config.checkout_timeout * 2</tt> seconds).
       def disconnect(raise_on_acquisition_timeout = true)
+        puts "::::::: disconnect"
+        puts "::::::: @connections.inspect: #{@connections.inspect}"
+        puts "::::::: conn: #{conn.inspect}"
         with_exclusively_acquired_all_connections(raise_on_acquisition_timeout) do
           synchronize do
             @connections.each do |conn|
