@@ -1051,6 +1051,7 @@ module ActiveRecord
         # if the user calls `establish_connection :primary`.
         puts "(pool_config.connection_specification_name): #{pool_config.connection_specification_name}"
         puts "owner_to_pool_manager.inspect: #{owner_to_pool_manager.inspect}"
+        puts "owner_to_pool_manager keys: #{owner_to_pool_manager.keys.inspect}"
         if owner_to_pool_manager.key?(pool_config.connection_specification_name)
           remove_connection_pool(pool_config.connection_specification_name, role: role, shard: shard)
         end
