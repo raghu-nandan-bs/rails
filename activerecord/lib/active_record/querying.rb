@@ -66,6 +66,11 @@ module ActiveRecord
         if result_set.includes_column?(inheritance_column)
           result_set.map { |record| instantiate(record, column_types, &block) }
         else
+          puts "|||||| instantiate_instance_of"
+          puts "|||||| self.inspect: #{self.inspect}"
+          puts "|||||| record.inspect: #{record.inspect}"
+          puts "|||||| column_types.inspect: #{column_types.inspect}"
+          puts "|||||| block.inspect: #{block.inspect}"
           # Instantiate a homogeneous set
           result_set.map { |record| instantiate_instance_of(self, record, column_types, &block) }
         end
