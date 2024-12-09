@@ -139,7 +139,9 @@ module ActiveRecord
             columns = @columns.map(&:-@)
             length  = columns.length
             template = nil
-
+            puts ">>>>>>> columns.inspect: #{columns.inspect}"
+            puts ">>>>>>> length: #{length}"
+            puts ">>>>>>> rows.inspect: #{rows.inspect}"
             @rows.map { |row|
               if template
                 # We use transform_values to build subsequent rows from the
