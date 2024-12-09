@@ -1044,10 +1044,13 @@ module ActiveRecord
         owner_name = config.to_s if config.is_a?(Symbol)
 
         pool_config = resolve_pool_config(config, owner_name)
+        puts "pool_config.inspect: #{pool_config.inspect}"
         db_config = pool_config.db_config
-
+        puts "db_config.inspect: #{db_config.inspect}"
         # Protects the connection named `ActiveRecord::Base` from being removed
         # if the user calls `establish_connection :primary`.
+        puts "(pool_config.connection_specification_name): #{pool_config.connection_specification_name}"
+        puts "owner_to_pool_manager.inspect: #{owner_to_pool_manager.inspect}"
         if owner_to_pool_manager.key?(pool_config.connection_specification_name)
           remove_connection_pool(pool_config.connection_specification_name, role: role, shard: shard)
         end
