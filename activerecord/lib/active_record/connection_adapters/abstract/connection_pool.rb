@@ -496,7 +496,7 @@ module ActiveRecord
 
         @connections.each do |conn|
           puts "::::::: conn.inspect: #{conn.inspect}"
-          conn.connection.close
+          conn[:connection].close
         end
 
         # with_exclusively_acquired_all_connections(raise_on_acquisition_timeout) do
