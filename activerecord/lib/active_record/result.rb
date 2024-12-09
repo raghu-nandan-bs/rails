@@ -159,16 +159,16 @@ module ActiveRecord
                 index = 0
                 while index < length
                   puts "columns.inspect: #{columns.inspect}"
-                  puts "row.inspect: #{row.inspect}"
+                  puts "row.inspect: #{rows.inspect}"
 
-                  hash[columns[index]] = row[index]
+                  hash[columns[index]] = rows[index]
                   index += 1
                 end
 
                 # It's possible to select the same column twice, in which case
                 # we can't use a template
                 template = hash if hash.length == length
-
+                puts "hash.inspect: #{hash.inspect}"
                 hash
               end
             }
