@@ -155,8 +155,8 @@ module ActiveRecord
                 #  both time and memory wise cause it avoids a big array allocation
                 #  this method is called a lot and needs to be micro optimised
                 hash = {}
-                puts "columns.inspect: #{columns.inspect}"
-                puts "row.inspect: #{row.inspect}"
+                puts "/////////// columns.inspect: #{columns.inspect}"
+                puts "/////////// row.inspect: #{row.inspect}"
                 index = 0
                 while index < length
                   hash[columns[index]] = row[index]
