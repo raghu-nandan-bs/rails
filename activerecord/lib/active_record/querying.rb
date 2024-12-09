@@ -64,6 +64,12 @@ module ActiveRecord
 
       message_bus.instrument("instantiation.active_record", payload) do
         if result_set.includes_column?(inheritance_column)
+          puts "|||||| result_set.includes_column?(inheritance_column)"
+          puts "|||||| inheritance_column: #{inheritance_column}"
+          puts "|||||| record.inspect: #{record.inspect}"
+          puts "|||||| column_types.inspect: #{column_types.inspect}"
+          puts "|||||| block.inspect: #{block.inspect}"
+
           result_set.map { |record| instantiate(record, column_types, &block) }
         else
           puts "|||||| instantiate_instance_of"
