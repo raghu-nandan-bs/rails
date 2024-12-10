@@ -30,6 +30,7 @@ module ActiveRecord
       end
 
       def []=(key, value)
+        puts "|||||| [InternalMetadata] []= key: #{key.inspect}, value: #{value.inspect}"
         return unless enabled?
 
         find_or_initialize_by(key: key).update!(value: value)
