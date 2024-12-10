@@ -492,6 +492,7 @@ module ActiveRecord
       #   <tt>spec.db_config.checkout_timeout * 2</tt> seconds).
       def disconnect(raise_on_acquisition_timeout = true)
         puts "#{self.class.name} disconnect for #{connection_klass}"
+        puts "Using adapter: #{connection_klass.connection.class.name}" # if connection_klass.connected?
 
         with_exclusively_acquired_all_connections(raise_on_acquisition_timeout) do
           synchronize do
