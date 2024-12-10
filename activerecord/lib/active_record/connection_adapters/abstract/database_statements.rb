@@ -63,10 +63,16 @@ module ActiveRecord
         puts "|||||| [Database Statements] select_all"
         arel = arel_from_relation(arel)
         sql, binds, preparable = to_sql_and_binds(arel, binds, preparable)
+        puts "|||||| [Database Statements] sql: #{sql.inspect}"
+        puts "|||||| [Database Statements] name: #{name.inspect}"
+        puts "|||||| [Database Statements] binds: #{binds.inspect}"
+        puts "|||||| [Database Statements] preparable: #{preparable.inspect}"
 
         if prepared_statements && preparable
+          puts "|||||| [Database Statements] prepared_statements: #{prepared_statements.inspect}"
           select_prepared(sql, name, binds)
         else
+          puts "|||||| [Database Statements] else"
           select(sql, name, binds)
         end
       rescue ::RangeError
