@@ -60,6 +60,7 @@ module ActiveRecord
 
       # Returns an ActiveRecord::Result instance.
       def select_all(arel, name = nil, binds = [], preparable: nil)
+        puts "|||||| [Database Statements] select_all"
         arel = arel_from_relation(arel)
         sql, binds, preparable = to_sql_and_binds(arel, binds, preparable)
 

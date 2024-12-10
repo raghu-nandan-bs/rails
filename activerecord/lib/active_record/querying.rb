@@ -46,6 +46,7 @@ module ActiveRecord
     def find_by_sql(sql, binds = [], preparable: nil, &block)
       puts "|||||| connection.inspect: #{connection.inspect}"
       puts "|||||| sql: #{sql.methods}"
+      puts "|||||| sql.where_sql: #{sql.where_sql}"
       puts "|||||| name: #{name}"
       puts "|||||| binds: #{binds.inspect}"
       puts "|||||| preparable: #{preparable.inspect}"

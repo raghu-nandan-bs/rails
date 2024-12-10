@@ -94,6 +94,7 @@ module ActiveRecord
       end
 
       def select_all(arel, name = nil, binds = [], preparable: nil)
+        puts "|||||| [Query Cache] select_all"
         if @query_cache_enabled && !locked?(arel)
           arel = arel_from_relation(arel)
           sql, binds, preparable = to_sql_and_binds(arel, binds, preparable)
