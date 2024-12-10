@@ -354,6 +354,7 @@ module ActiveRecord
         status = yield
         raise ActiveRecord::Rollback unless status
       end
+      puts "|||||| status: #{status.inspect}"
       status
     end
 

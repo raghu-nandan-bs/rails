@@ -632,9 +632,11 @@ module ActiveRecord
     # Updates its receiver just like #update but calls #save! instead
     # of +save+, so an exception is raised if the record is invalid and saving will fail.
     def update!(attributes)
+      puts "|||||| update! attributes: #{attributes.inspect}"
       # The following transaction covers any possible database side-effects of the
       # attributes assignment. For example, setting the IDs of a child collection.
       with_transaction_returning_status do
+        puts "|||||| attributes: #{attributes.inspect}"
         assign_attributes(attributes)
         save!
       end
