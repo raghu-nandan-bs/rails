@@ -686,7 +686,7 @@ module ActiveRecord
       def flush(minimum_idle = @idle_timeout)
         puts "ConnectionPool#flush(minimum_idle: #{minimum_idle})"
         return if minimum_idle.nil?
-
+        puts "Idle connections: #{idle_connections.inspect}"
         idle_connections = synchronize do
           return if self.discarded?
           @connections.select do |conn|
