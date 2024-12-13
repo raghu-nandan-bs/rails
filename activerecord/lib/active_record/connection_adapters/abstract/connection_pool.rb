@@ -1115,14 +1115,23 @@ module ActiveRecord
       alias :connection_pools :connection_pool_list
 
       def establish_connection(config, owner_name: Base, role: ActiveRecord::Base.current_role, shard: Base.current_shard)
+        puts "ConnectionHandler#establish_connection starting"
+        puts "  config: #{config.inspect}"
+        puts "  owner_name: #{owner_name}"
+        puts "  role: #{role}"
+        puts "  shard: #{shard}"
+
         owner_name = config.to_s if config.is_a?(Symbol)
+        puts "  resolved owner_name: #{owner_name}"
 
         pool_config = resolve_pool_config(config, owner_name)
-        db_config = pool_config.db_config
+        puts "  resolved pool_config: #{pool_config.inspect}"
 
-        # Protects the connection named `ActiveRecord::Base` from being removed
-        # if the user calls `establish_connection :primary`.
+        db_config = pool_config.db_config
+        puts "  db_config: #{db_config.inspect}"
+
         if owner_to_pool_manager.key?(pool_config.connection_specification_name)
+          puts "  removing existing connection pool for #{pool_config.connection_specification_name}"
           remove_connection_pool(pool_config.connection_specification_name, role: role, shard: shard)
         end
 
@@ -1132,16 +1141,24 @@ module ActiveRecord
           payload[:spec_name] = pool_config.connection_specification_name
           payload[:shard] = shard
           payload[:config] = db_config.configuration_hash
+          puts "  notification payload: #{payload.inspect}"
         end
 
         if ActiveRecord::Base.legacy_connection_handling
+          puts "  using legacy connection handling"
           owner_to_pool_manager[pool_config.connection_specification_name] ||= LegacyPoolManager.new
         else
+          puts "  using new connection handling"
           owner_to_pool_manager[pool_config.connection_specification_name] ||= PoolManager.new
         end
-        pool_manager = get_pool_manager(pool_config.connection_specification_name)
-        pool_manager.set_pool_config(role, shard, pool_config)
 
+        pool_manager = get_pool_manager(pool_config.connection_specification_name)
+        puts "  got pool_manager: #{pool_manager.inspect}"
+
+        pool_manager.set_pool_config(role, shard, pool_config)
+        puts "  set pool config for role: #{role}, shard: #{shard}"
+
+        puts "  instrumenting connection creation"
         message_bus.instrument("!connection.active_record", payload) do
           pool_config.pool
         end
