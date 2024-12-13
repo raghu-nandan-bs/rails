@@ -1041,38 +1041,56 @@ module ActiveRecord
       alias :connection_pools :connection_pool_list
 
       def establish_connection(config, owner_name: Base, role: ActiveRecord::Base.current_role, shard: Base.current_shard)
-        owner_name = config.to_s if config.is_a?(Symbol)
+        puts "Starting establish_connection with config: #{config}, owner: #{owner_name}, role: #{role}, shard: #{shard}"
 
+        # Convert symbol configs to strings
+        if config.is_a?(Symbol)
+          owner_name = config.to_s
+          puts "Config is a symbol, converted owner_name to string: #{owner_name}"
+        end
+
+        # Create pool configuration from input config
         pool_config = resolve_pool_config(config, owner_name)
         db_config = pool_config.db_config
+        puts "Created pool_config with connection_specification_name: #{pool_config.connection_specification_name}"
+        puts "Database config: #{db_config.configuration_hash}"
 
-        # Protects the connection named `ActiveRecord::Base` from being removed
-        # if the user calls `establish_connection :primary`.
+        # Remove existing connection pool if it exists
         if owner_to_pool_manager.key?(pool_config.connection_specification_name)
+          puts "Removing existing connection pool for #{pool_config.connection_specification_name}"
           remove_connection_pool(pool_config.connection_specification_name, role: role, shard: shard)
         end
 
+        # Set up instrumentation payload
         message_bus = ActiveSupport::Notifications.instrumenter
         payload = {}
         if pool_config
           payload[:spec_name] = pool_config.connection_specification_name
           payload[:shard] = shard
           payload[:config] = db_config.configuration_hash
+          puts "Created instrumentation payload with spec_name: #{payload[:spec_name]}"
         end
 
+        # Create pool manager based on connection handling mode
         if ActiveRecord::Base.legacy_connection_handling
+          puts "Using legacy connection handling - creating LegacyPoolManager"
           owner_to_pool_manager[pool_config.connection_specification_name] ||= LegacyPoolManager.new
         else
+          puts "Using new connection handling - creating PoolManager"
           owner_to_pool_manager[pool_config.connection_specification_name] ||= PoolManager.new
         end
+
+        # Get pool manager and set pool config
         pool_manager = get_pool_manager(pool_config.connection_specification_name)
+        puts "Setting pool config for role: #{role}, shard: #{shard}"
         pool_manager.set_pool_config(role, shard, pool_config)
 
+        # Create and return the connection pool with instrumentation
+        puts "Creating connection pool with instrumentation"
         message_bus.instrument("!connection.active_record", payload) do
           pool_config.pool
         end
       end
-
       # Returns true if there are any active connections among the connection
       # pools that the ConnectionHandler is managing.
       def active_connections?(role = ActiveRecord::Base.current_role)
