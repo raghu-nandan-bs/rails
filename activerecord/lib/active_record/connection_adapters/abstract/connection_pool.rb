@@ -372,6 +372,7 @@ module ActiveRecord
       # The default ConnectionPool maximum size is 5.
       def initialize(pool_config)
         puts "ConnectionPool#initialize(pool_config: #{pool_config})"
+        puts caller
         super()
 
         @pool_config = pool_config
@@ -414,6 +415,7 @@ module ActiveRecord
 
       def lock_thread=(lock_thread)
         puts "ConnectionPool#lock_thread=(lock_thread: #{lock_thread})"
+        puts caller
         if lock_thread
           @lock_thread = Thread.current
         else
@@ -428,6 +430,7 @@ module ActiveRecord
       # held in a cache keyed by a thread.
       def connection
         puts "ConnectionPool#connection"
+        puts caller
         @thread_cached_conns[connection_cache_key(current_thread)] ||= checkout
       end
 
@@ -438,6 +441,7 @@ module ActiveRecord
       # #checkout will not be detected by #active_connection?
       def active_connection?
         puts "ConnectionPool#active_connection?"
+        puts caller
         @thread_cached_conns[connection_cache_key(current_thread)]
       end
 
@@ -450,6 +454,7 @@ module ActiveRecord
       # #checkout will not be automatically released.
       def release_connection(owner_thread = Thread.current)
         puts "ConnectionPool#release_connection(owner_thread: #{owner_thread})"
+        puts caller
         if conn = @thread_cached_conns.delete(connection_cache_key(owner_thread))
           checkin conn
         end
@@ -461,6 +466,7 @@ module ActiveRecord
       # connection when finished.
       def with_connection
         puts "ConnectionPool#with_connection"
+        puts caller
         unless conn = @thread_cached_conns[connection_cache_key(Thread.current)]
           conn = connection
           fresh_connection = true
@@ -473,6 +479,7 @@ module ActiveRecord
       # Returns true if a connection has already been opened.
       def connected?
         puts "ConnectionPool#connected?"
+        puts caller
         synchronize { @connections.any? }
       end
 
@@ -489,6 +496,7 @@ module ActiveRecord
       # on connection adapter classes are inherently multi-thread unsafe.
       def connections
         puts "ConnectionPool#connections"
+        puts caller
         synchronize { @connections.dup }
       end
 
@@ -500,6 +508,7 @@ module ActiveRecord
       #   <tt>spec.db_config.checkout_timeout * 2</tt> seconds).
       def disconnect(raise_on_acquisition_timeout = true)
         puts "ConnectionPool#disconnect(raise_on_acquisition_timeout: #{raise_on_acquisition_timeout})"
+        puts caller
         with_exclusively_acquired_all_connections(raise_on_acquisition_timeout) do
           synchronize do
             @connections.each do |conn|
@@ -523,6 +532,7 @@ module ActiveRecord
       # disconnected without any regard for other connection owning threads.
       def disconnect!
         puts "ConnectionPool#disconnect!"
+        puts caller
         disconnect(false)
       end
 
@@ -533,6 +543,7 @@ module ActiveRecord
       # See AbstractAdapter#discard!
       def discard! # :nodoc:
         puts "ConnectionPool#discard!"
+        puts caller
         synchronize do
           return if self.discarded?
           @connections.each do |conn|
@@ -544,6 +555,7 @@ module ActiveRecord
 
       def discarded? # :nodoc:
         puts "ConnectionPool#discarded?"
+        puts caller
         @connections.nil?
       end
 
@@ -556,6 +568,7 @@ module ActiveRecord
       #   <tt>spec.db_config.checkout_timeout * 2</tt> seconds).
       def clear_reloadable_connections(raise_on_acquisition_timeout = true)
         puts "ConnectionPool#clear_reloadable_connections(raise_on_acquisition_timeout: #{raise_on_acquisition_timeout})"
+        puts caller
         with_exclusively_acquired_all_connections(raise_on_acquisition_timeout) do
           synchronize do
             @connections.each do |conn|
@@ -581,6 +594,7 @@ module ActiveRecord
       # connection owning threads.
       def clear_reloadable_connections!
         puts "ConnectionPool#clear_reloadable_connections!"
+        puts caller
         clear_reloadable_connections(false)
       end
 
@@ -600,6 +614,7 @@ module ActiveRecord
       # - ActiveRecord::ConnectionTimeoutError no connection can be obtained from the pool.
       def checkout(checkout_timeout = @checkout_timeout)
         puts "ConnectionPool#checkout(checkout_timeout: #{checkout_timeout})"
+        puts caller
         checkout_and_verify(acquire_connection(checkout_timeout))
       end
 
@@ -610,6 +625,7 @@ module ActiveRecord
       # calling #checkout on this pool.
       def checkin(conn)
         puts "ConnectionPool#checkin(conn: #{conn})"
+        puts caller
         conn.lock.synchronize do
           synchronize do
             remove_connection_from_thread_cache conn
@@ -627,6 +643,7 @@ module ActiveRecord
       # remain open and active but will no longer be managed by this pool.
       def remove(conn)
         puts "ConnectionPool#remove(conn: #{conn})"
+        puts caller
         needs_new_connection = false
 
         synchronize do
@@ -660,7 +677,10 @@ module ActiveRecord
       # or a thread dies unexpectedly.
       def reap
         puts "ConnectionPool#reap"
+        puts caller
         puts "@connections = #{@connections.inspect}"
+        # Start Generation Here
+        puts caller
         stale_connections = synchronize do
           return if self.discarded?
           @connections.select do |conn|
@@ -685,8 +705,8 @@ module ActiveRecord
       # checked in less than +minimum_idle+ seconds ago, are unaffected.
       def flush(minimum_idle = @idle_timeout)
         puts "ConnectionPool#flush(minimum_idle: #{minimum_idle})"
+        puts caller
         return if minimum_idle.nil?
-        puts "Idle connections: #{idle_connections.inspect}"
         idle_connections = synchronize do
           return if self.discarded?
           @connections.select do |conn|
@@ -708,12 +728,14 @@ module ActiveRecord
       # out are unaffected.
       def flush!
         puts "ConnectionPool#flush!"
+        puts caller
         reap
         flush(-1)
       end
 
       def num_waiting_in_queue # :nodoc:
         puts "ConnectionPool#num_waiting_in_queue"
+        puts caller
         @available.num_waiting
       end
 
@@ -723,6 +745,7 @@ module ActiveRecord
       #    ActiveRecord::Base.connection_pool.stat # => { size: 15, connections: 1, busy: 1, dead: 0, idle: 0, waiting: 0, checkout_timeout: 5 }
       def stat
         puts "ConnectionPool#stat"
+        puts caller
         synchronize do
           {
             size: size,
@@ -741,6 +764,7 @@ module ActiveRecord
         # this is unfortunately not concurrent
         def bulk_make_new_connections(num_new_conns_needed)
           puts "ConnectionPool#bulk_make_new_connections(num_new_conns_needed: #{num_new_conns_needed})"
+          puts caller
           num_new_conns_needed.times do
             # try_to_checkout_new_connection will not exceed pool's @size limit
             if new_conn = try_to_checkout_new_connection
@@ -757,11 +781,13 @@ module ActiveRecord
         # JRuby users that use Fibers.
         def connection_cache_key(thread)
           puts "ConnectionPool#connection_cache_key(thread: #{thread})"
+          puts caller
           thread
         end
 
         def current_thread
           puts "ConnectionPool#current_thread"
+          puts caller
           @lock_thread || Thread.current
         end
 
@@ -771,6 +797,7 @@ module ActiveRecord
         # to be performed outside of the main +synchronize+ block.
         def with_exclusively_acquired_all_connections(raise_on_acquisition_timeout = true)
           puts "ConnectionPool#with_exclusively_acquired_all_connections(raise_on_acquisition_timeout: #{raise_on_acquisition_timeout})"
+          puts caller
           with_new_connections_blocked do
             attempt_to_checkout_all_existing_connections(raise_on_acquisition_timeout)
             yield
@@ -779,6 +806,7 @@ module ActiveRecord
 
         def attempt_to_checkout_all_existing_connections(raise_on_acquisition_timeout = true)
           puts "ConnectionPool#attempt_to_checkout_all_existing_connections(raise_on_acquisition_timeout: #{raise_on_acquisition_timeout})"
+          puts caller
           collected_conns = synchronize do
             # account for our own connections
             @connections.select { |conn| conn.owner == Thread.current }
@@ -825,6 +853,8 @@ module ActiveRecord
         #--
         # Must be called in a synchronize block.
         def checkout_for_exclusive_access(checkout_timeout)
+          puts "ConnectionPool#checkout_for_exclusive_access(checkout_timeout: #{checkout_timeout})"
+          puts caller
           checkout(checkout_timeout)
         rescue ConnectionTimeoutError
           # this block can't be easily moved into attempt_to_checkout_all_existing_connections's
@@ -846,6 +876,7 @@ module ActiveRecord
 
         def with_new_connections_blocked
           puts "ConnectionPool#with_new_connections_blocked"
+          puts caller
           synchronize do
             @threads_blocking_new_connections += 1
           end
@@ -887,6 +918,7 @@ module ActiveRecord
         # will already be "+connection.lease+ -ed" to the current thread.
         def acquire_connection(checkout_timeout)
           puts "ConnectionPool#acquire_connection(checkout_timeout: #{checkout_timeout})"
+          puts caller
           # NOTE: we rely on <tt>@available.poll</tt> and +try_to_checkout_new_connection+ to
           # +conn.lease+ the returned connection (and to do this in a +synchronized+
           # section). This is not the cleanest implementation, as ideally we would
@@ -905,12 +937,14 @@ module ActiveRecord
         # if owner_thread param is omitted, this must be called in synchronize block
         def remove_connection_from_thread_cache(conn, owner_thread = conn.owner)
           puts "ConnectionPool#remove_connection_from_thread_cache(conn: #{conn}, owner_thread: #{owner_thread})"
+          puts caller
           @thread_cached_conns.delete_pair(connection_cache_key(owner_thread), conn)
         end
         alias_method :release, :remove_connection_from_thread_cache
 
         def new_connection
           puts "ConnectionPool#new_connection"
+          puts caller
           Base.public_send(db_config.adapter_method, db_config.configuration_hash).tap do |conn|
             conn.check_version
           end
@@ -923,6 +957,7 @@ module ActiveRecord
         # method must be in the +.leased+ state.
         def try_to_checkout_new_connection
           puts "ConnectionPool#try_to_checkout_new_connection"
+          puts caller
           # first in synchronized section check if establishing new conns is allowed
           # and increment @now_connecting, to prevent overstepping this pool's @size
           # constraint
@@ -951,18 +986,21 @@ module ActiveRecord
 
         def adopt_connection(conn)
           puts "ConnectionPool#adopt_connection(conn: #{conn})"
+          puts caller
           conn.pool = self
           @connections << conn
         end
 
         def checkout_new_connection
           puts "ConnectionPool#checkout_new_connection"
+          puts caller
           raise ConnectionNotEstablished unless @automatic_reconnect
           new_connection
         end
 
         def checkout_and_verify(c)
           puts "ConnectionPool#checkout_and_verify(c: #{c})"
+          puts caller
           c._run_checkout_callbacks do
             c.verify!
           end
