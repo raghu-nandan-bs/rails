@@ -660,6 +660,7 @@ module ActiveRecord
       # or a thread dies unexpectedly.
       def reap
         puts "ConnectionPool#reap"
+        puts "@connections = #{@connections.inspect}"
         stale_connections = synchronize do
           return if self.discarded?
           @connections.select do |conn|
