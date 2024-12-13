@@ -1082,6 +1082,9 @@ module ActiveRecord
 
         # Get pool manager and set pool config
         pool_manager = get_pool_manager(pool_config.connection_specification_name)
+            # Start Generation Here
+            puts "Pool Manager: #{pool_manager.class.name}"
+            puts "Pool Manager Details: #{pool_manager.inspect}"
         puts "Setting pool config for role: #{role}, shard: #{shard}"
         pool_manager.set_pool_config(role, shard, pool_config)
 
@@ -1090,6 +1093,10 @@ module ActiveRecord
         message_bus.instrument("!connection.active_record", payload) do
           pool_config.pool
         end
+        puts "Connection pool created successfully"
+        puts "pool : #{pool_config.pool.inspect}"
+        pool_config.pool
+
       end
       # Returns true if there are any active connections among the connection
       # pools that the ConnectionHandler is managing.
