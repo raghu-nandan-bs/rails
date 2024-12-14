@@ -425,6 +425,7 @@ module ActiveRecord
       # #connection can be called any number of times; the connection is
       # held in a cache keyed by a thread.
       def connection
+        puts "Getting connection from pool"
         @thread_cached_conns[connection_cache_key(current_thread)] ||= checkout
       end
 
@@ -585,6 +586,7 @@ module ActiveRecord
       # Raises:
       # - ActiveRecord::ConnectionTimeoutError no connection can be obtained from the pool.
       def checkout(checkout_timeout = @checkout_timeout)
+        puts "Checking out connection from pool"
         checkout_and_verify(acquire_connection(checkout_timeout))
       end
 
@@ -1219,13 +1221,14 @@ module ActiveRecord
         #
         def resolve_pool_config(config, owner_name)
           db_config = Base.configurations.resolve(config)
-
+          puts "Resolved db_config: #{db_config.inspect}"
           raise(AdapterNotSpecified, "database configuration does not specify adapter") unless db_config.adapter
 
           # Require the adapter itself and give useful feedback about
           #   1. Missing adapter gems and
           #   2. Adapter gems' missing dependencies.
           path_to_adapter = "active_record/connection_adapters/#{db_config.adapter}_adapter"
+          puts "Path to adapter: #{path_to_adapter}"
           begin
             require path_to_adapter
           rescue LoadError => e
@@ -1246,7 +1249,7 @@ module ActiveRecord
           unless ActiveRecord::Base.respond_to?(db_config.adapter_method)
             raise AdapterNotFound, "database configuration specifies nonexistent #{db_config.adapter} adapter"
           end
-
+          puts "Creating PoolConfig with owner_name: #{owner_name} and db_config: #{db_config.inspect}"
           ConnectionAdapters::PoolConfig.new(owner_name, db_config)
         end
     end
