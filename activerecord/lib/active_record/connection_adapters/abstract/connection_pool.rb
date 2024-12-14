@@ -1084,7 +1084,7 @@ module ActiveRecord
         # Create pool manager based on connection handling mode
         if ActiveRecord::Base.legacy_connection_handling
           puts "Using legacy connection handling - creating LegacyPoolManager"
-          owner_to_pool_manager[pool_config.connection_specification_name] ||= LegacyPoolManager.new
+          owner_to_pool_manager[pool_config.connection_specification_name] ||= PoolManager.new #LegacyPoolManager.new
         else
           puts "Using new connection handling - creating PoolManager"
           owner_to_pool_manager[pool_config.connection_specification_name] ||= PoolManager.new
