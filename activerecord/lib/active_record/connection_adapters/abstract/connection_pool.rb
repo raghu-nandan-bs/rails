@@ -372,11 +372,13 @@ module ActiveRecord
       # The default ConnectionPool maximum size is 5.
       def initialize(pool_config)
         super()
-
+        puts "ConnectionPool's super class: #{super.class.name}"
         @pool_config = pool_config
+        puts "Initializing ConnectionPool with PoolConfig: #{pool_config.inspect}"
         @db_config = pool_config.db_config
+        puts "DB Config: #{db_config.inspect}"
         @connection_klass = pool_config.connection_klass
-
+        puts "Connection Klass: #{connection_klass.inspect}"
         @checkout_timeout = db_config.checkout_timeout
         @idle_timeout = db_config.idle_timeout
         @size = db_config.pool
