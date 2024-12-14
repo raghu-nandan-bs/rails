@@ -1099,7 +1099,7 @@ module ActiveRecord
         puts "Setting pool config for role: #{role}, shard: #{shard}"
         pool_manager.set_pool_config(role, shard, pool_config)
         puts "Pool config set successfully"
-        puts "Pool manager details after setting pool config:" # #{pool_manager.inspect}
+        puts "Pool manager details after setting pool config: #{pool_manager.inspect}"
         # Create and return the connection pool with instrumentation
         message_bus.instrument("!connection.active_record", payload) do
           pool_config.pool
