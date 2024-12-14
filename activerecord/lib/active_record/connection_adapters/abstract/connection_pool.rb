@@ -1080,6 +1080,7 @@ module ActiveRecord
           puts "Created instrumentation payload with spec_name: #{payload[:spec_name]}"
         end
 
+        puts "DB Config before creating pool manager: #{db_config.inspect}"
         # Create pool manager based on connection handling mode
         if ActiveRecord::Base.legacy_connection_handling
           puts "Using legacy connection handling - creating LegacyPoolManager"
@@ -1088,6 +1089,7 @@ module ActiveRecord
           puts "Using new connection handling - creating PoolManager"
           owner_to_pool_manager[pool_config.connection_specification_name] ||= PoolManager.new
         end
+        puts "DB Config after creating pool manager: #{db_config.inspect}"
 
         # Get pool manager and set pool config
         pool_manager = get_pool_manager(pool_config.connection_specification_name)
