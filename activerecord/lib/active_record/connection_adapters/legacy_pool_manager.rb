@@ -26,6 +26,7 @@ module ActiveRecord
       def set_pool_config(role, shard, pool_config)
         if pool_config
           puts "[LegacyPoolManager] Setting pool config for role: #{role}, shard: #{shard}"
+          puts "[LegacyPoolManager] Pool config: #{pool_config}"
           puts "[LegacyPoolManager] Pool config: #{pool_config.inspect}"
           @name_to_pool_config[shard] = pool_config
         else
