@@ -427,6 +427,10 @@ module ActiveRecord
       # #connection can be called any number of times; the connection is
       # held in a cache keyed by a thread.
       def connection
+        # print the current class name
+        puts "What brought me here: #{caller}"
+        puts "[ConnectionPool] Class name: #{self.class.name}"
+
         puts "Getting connection from pool"
         @thread_cached_conns[connection_cache_key(current_thread)] ||= checkout
       end
