@@ -1062,7 +1062,7 @@ module ActiveRecord
         pool_config = resolve_pool_config(config, owner_name)
         db_config = pool_config.db_config
         puts "Created pool_config with connection_specification_name: #{pool_config.connection_specification_name}"
-        puts "Database config: #{db_config.configuration_hash}"
+        puts "Database config: #{db_config.inspect}"
 
         # Remove existing connection pool if it exists
         if owner_to_pool_manager.key?(pool_config.connection_specification_name)
