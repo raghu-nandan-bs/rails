@@ -867,6 +867,7 @@ module ActiveRecord
           # <tt>synchronize { conn.lease }</tt> in this method, but by leaving it to <tt>@available.poll</tt>
           # and +try_to_checkout_new_connection+ we can piggyback on +synchronize+ sections
           # of the said methods and avoid an additional +synchronize+ overhead.
+          puts "Try to checkout new connection: #{try_to_checkout_new_connection.inspect}"
           if conn = @available.poll || try_to_checkout_new_connection
             conn
           else
@@ -883,6 +884,9 @@ module ActiveRecord
         alias_method :release, :remove_connection_from_thread_cache
 
         def new_connection
+          puts "[new_connection] Creating new connection"
+          puts "[new_connection] Base class: #{Base.inspect}"
+          puts "[new_connection] db_config: #{db_config.inspect}"
           Base.public_send(db_config.adapter_method, db_config.configuration_hash).tap do |conn|
             conn.check_version
           end
@@ -906,6 +910,7 @@ module ActiveRecord
             begin
               # if successfully incremented @now_connecting establish new connection
               # outside of synchronized section
+              puts "[try to checkout new connection] Checking out new connection"
               conn = checkout_new_connection
             ensure
               synchronize do
