@@ -377,6 +377,7 @@ module ActiveRecord
 
       # Indicates whether the table associated with this class exists
       def table_exists?
+        puts "[ModelSchema] table_exists? called for #{table_name}"
         connection.schema_cache.data_source_exists?(table_name)
       end
 

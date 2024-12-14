@@ -57,6 +57,7 @@ module ActiveRecord
       #   table_exists?(:developers)
       #
       def table_exists?(table_name)
+        puts "[SchemaStatements] table_exists? called for #{table_name}"
         query_values(data_source_sql(table_name, type: "BASE TABLE"), "SCHEMA").any? if table_name.present?
       rescue NotImplementedError
         tables.include?(table_name.to_s)
