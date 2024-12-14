@@ -374,7 +374,7 @@ module ActiveRecord
         super()
         @pool_config = pool_config
         puts "Initializing ConnectionPool with PoolConfig: #{pool_config.inspect}"
-        puts "super class: #{super.class.name}"
+        #puts "super class: #{}"
         @db_config = pool_config.db_config
         puts "DB Config: #{db_config.inspect}"
         @connection_klass = pool_config.connection_klass
