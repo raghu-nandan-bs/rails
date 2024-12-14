@@ -1093,7 +1093,6 @@ module ActiveRecord
         pool_manager.set_pool_config(role, shard, pool_config)
 
         # Create and return the connection pool with instrumentation
-        puts "Creating connection pool with instrumentation"
         message_bus.instrument("!connection.active_record", payload) do
           pool_config.pool
         end
