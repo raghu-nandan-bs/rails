@@ -871,7 +871,6 @@ module ActiveRecord
           # <tt>synchronize { conn.lease }</tt> in this method, but by leaving it to <tt>@available.poll</tt>
           # and +try_to_checkout_new_connection+ we can piggyback on +synchronize+ sections
           # of the said methods and avoid an additional +synchronize+ overhead.
-          puts "Try to checkout new connection: #{try_to_checkout_new_connection.inspect}"
           if conn = @available.poll || try_to_checkout_new_connection
             conn
           else
