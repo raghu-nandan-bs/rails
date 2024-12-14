@@ -20,7 +20,7 @@ module ActiveRecord
       def initialize(connection_klass, db_config)
         puts "[PoolConfig] Initializing super method"
         super()
-        puts "[PoolConfig] Initializing PoolConfig with connection_klass: #{connection_klass.inspect} and db_config: #{db_config.inspect}"
+        puts "[PoolConfig] Initializing PoolConfig with connection_klass: #{connection_klass.inspect} and db_config:" # #{db_config.inspect}"
 
         @connection_klass = connection_klass
         @db_config = db_config
