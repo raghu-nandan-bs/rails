@@ -1084,7 +1084,7 @@ module ActiveRecord
         # Create pool manager based on connection handling mode
         if ActiveRecord::Base.legacy_connection_handling
           puts "Using legacy connection handling - creating LegacyPoolManager"
-          owner_to_pool_manager[pool_config.connection_specification_name] ||= PoolManager.new #LegacyPoolManager.new
+          owner_to_pool_manager[pool_config.connection_specification_name] ||= LegacyPoolManager.new
         else
           puts "Using new connection handling - creating PoolManager"
           owner_to_pool_manager[pool_config.connection_specification_name] ||= PoolManager.new
@@ -1094,8 +1094,8 @@ module ActiveRecord
         # Get pool manager and set pool config
         pool_manager = get_pool_manager(pool_config.connection_specification_name)
             # Start Generation Here
-            puts "Pool Manager: #{pool_manager.class.name}"
-            puts "Pool Manager Details: #{pool_manager.inspect}"
+        puts "Pool Manager: #{pool_manager.class.name}"
+        puts "Pool Manager Details: #{pool_manager.inspect}"
         puts "Setting pool config for role: #{role}, shard: #{shard}"
         pool_manager.set_pool_config(role, shard, pool_config)
         puts "Pool config set successfully"
