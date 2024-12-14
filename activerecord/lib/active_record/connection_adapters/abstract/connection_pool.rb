@@ -903,6 +903,7 @@ module ActiveRecord
         def try_to_checkout_new_connection
           puts "[try to checkout new connection] Trying to checkout new connection"
           puts "what brought me here: #{caller}"
+          puts "my current class state: #{self.inspect}"
           # first in synchronized section check if establishing new conns is allowed
           # and increment @now_connecting, to prevent overstepping this pool's @size
           # constraint
