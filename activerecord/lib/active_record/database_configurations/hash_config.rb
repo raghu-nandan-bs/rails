@@ -30,7 +30,7 @@ module ActiveRecord
         super(env_name, name)
         @configuration_hash = configuration_hash.symbolize_keys.freeze
         puts "I am self.class: #{self.class}"
-        puts "I was called by #{called}"
+        puts "I was called by #{caller}"
         puts "HashConfig initialized with env_name: #{env_name}, name: #{name}, configuration_hash: #{configuration_hash.inspect}"
       end
 
