@@ -259,6 +259,7 @@ module ActiveRecord
       # Returns the human-readable name of the adapter. Use mixed case - one
       # can always use downcase if needed.
       def adapter_name
+        puts "[Adapter name call made] #{caller}"
         self.class::ADAPTER_NAME
       end
 
