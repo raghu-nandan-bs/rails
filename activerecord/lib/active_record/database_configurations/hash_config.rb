@@ -29,6 +29,7 @@ module ActiveRecord
       def initialize(env_name, name, configuration_hash)
         super(env_name, name)
         @configuration_hash = configuration_hash.symbolize_keys.freeze
+        puts "HashConfig initialized with env_name: #{env_name}, name: #{name}, configuration_hash: #{configuration_hash.inspect}"
       end
 
       def config

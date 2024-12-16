@@ -43,7 +43,7 @@ module ActiveRecord
         name = spec_name
         ActiveSupport::Deprecation.warn("The kwarg `spec_name` is deprecated in favor of `name`. `spec_name` will be removed in Rails 7.0")
       end
-
+      puts "fetching configs for env_name: #{env_name}, name: #{name}, include_replicas: #{include_replicas}"
       env_name ||= default_env if name
       configs = env_with_configs(env_name)
 
@@ -80,12 +80,14 @@ module ActiveRecord
     # If the application has multiple databases +find_db_config+ will return
     # the first DatabaseConfig for the environment.
     def find_db_config(env)
+      puts "fetching db config for env: #{env}"
       configurations
         .sort_by.with_index { |db_config, i| db_config.for_current_env? ? [0, i] : [1, i] }
         .find do |db_config|
           db_config.env_name == env.to_s ||
             (db_config.for_current_env? && db_config.name == env.to_s)
         end
+
     end
 
     # A primary configuration is one that is named primary or if there is
