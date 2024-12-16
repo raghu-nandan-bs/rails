@@ -1201,7 +1201,9 @@ module ActiveRecord
       # This makes retrieving the connection pool O(1) once the process is warm.
       # When a connection is established or removed, we invalidate the cache.
       def retrieve_connection_pool(owner, role: ActiveRecord::Base.current_role, shard: ActiveRecord::Base.current_shard)
+        puts "Retrieving connection pool for owner: #{owner}, role: #{role}, shard: #{shard}"
         pool_config = get_pool_manager(owner)&.get_pool_config(role, shard)
+        puts "Pool config: #{pool_config.inspect}"
         pool_config&.pool
       end
 
