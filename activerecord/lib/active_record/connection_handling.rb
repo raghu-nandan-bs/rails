@@ -90,11 +90,12 @@ module ActiveRecord
       database.each do |role, database_key|
         db_config, owner_name = resolve_config_for_connection(database_key)
         handler = lookup_connection_handler(role.to_sym)
-
+        puts "Establishing connection for role: #{role}, database_key: #{database_key}, owner_name: #{owner_name}"
         self.connection_class = true
         connections << handler.establish_connection(db_config, owner_name: owner_name, role: role)
       end
-
+      puts "connections: #{connections.inspect}"
+      puts "checking shards..."
       shards.each do |shard, database_keys|
         database_keys.each do |role, database_key|
           db_config, owner_name = resolve_config_for_connection(database_key)
@@ -104,7 +105,7 @@ module ActiveRecord
           connections << handler.establish_connection(db_config, owner_name: owner_name, role: role, shard: shard.to_sym)
         end
       end
-
+      puts "connections: #{connections.inspect}"
       connections
     end
 

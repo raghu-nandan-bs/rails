@@ -80,6 +80,7 @@ module ActiveRecord
       end
 
       def initialize(connection, logger = nil, config = {}) # :nodoc:
+        puts "Initializing abstract adapter"
         super()
 
         @connection          = connection
