@@ -367,6 +367,8 @@ module ActiveRecord
         raise "Anonymous class is not allowed." unless name
 
         owner_name = primary_class? ? Base.name : name
+        puts "setting connection_specification_name to #{owner_name}"
+        puts "caller stack: #{caller}"
         self.connection_specification_name = owner_name
 
         db_config = Base.configurations.resolve(config_or_env)
