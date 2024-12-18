@@ -300,6 +300,7 @@ module ActiveRecord
         puts "[connection_specification_name] superclass.connection_specification_name: #{superclass.connection_specification_name}"
         return self == Base ? Base.name : superclass.connection_specification_name
       end
+      puts "[connection_specification_name] returning #{@connection_specification_name}"
       @connection_specification_name
     end
 
