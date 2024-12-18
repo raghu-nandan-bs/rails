@@ -29,6 +29,7 @@ module ActiveRecord
       end
 
       def connection_specification_name
+        puts "[pool_config connection_specification_name] connection_klass : #{connection_klass.inspect}"
         if connection_klass.is_a?(String)
           connection_klass
         elsif connection_klass.primary_class?
