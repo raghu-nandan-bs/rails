@@ -49,6 +49,10 @@ module ActiveRecord
     def establish_connection(config_or_env = nil)
       config_or_env ||= DEFAULT_ENV.call.to_sym
       db_config, owner_name = resolve_config_for_connection(config_or_env)
+      puts "[establish_connection] db_config: #{db_config.inspect}"
+      puts "[establish_connection] owner_name: #{owner_name.inspect}"
+      puts "[establish_connection] current_role: #{current_role.inspect}"
+      puts "[establish_connection] current_shard: #{current_shard.inspect}"
       connection_handler.establish_connection(db_config, owner_name: owner_name, role: current_role, shard: current_shard)
     end
 
