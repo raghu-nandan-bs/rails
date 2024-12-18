@@ -39,6 +39,8 @@ module ActiveRecord
     #   connection (i.e. migrations don't need to run for the write and read connection).
     #   Defaults to +false+.
     def configs_for(env_name: nil, spec_name: nil, name: nil, include_replicas: false)
+
+      puts "[DatabaseConfigurations] configs_for called by: #{caller}"
       if spec_name
         name = spec_name
         ActiveSupport::Deprecation.warn("The kwarg `spec_name` is deprecated in favor of `name`. `spec_name` will be removed in Rails 7.0")
