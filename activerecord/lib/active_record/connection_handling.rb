@@ -293,6 +293,11 @@ module ActiveRecord
     # Return the connection specification name from the current class or its parent.
     def connection_specification_name
       if !defined?(@connection_specification_name) || @connection_specification_name.nil?
+        puts "connection_specification_name not defined, or is nil"
+        puts "caller stack: #{caller}"
+        puts "[connection_specification_name] self: #{self}"
+        puts "[connection_specification_name] superclass: #{superclass}"
+        puts "[connection_specification_name] superclass.connection_specification_name: #{superclass.connection_specification_name}"
         return self == Base ? Base.name : superclass.connection_specification_name
       end
       @connection_specification_name
