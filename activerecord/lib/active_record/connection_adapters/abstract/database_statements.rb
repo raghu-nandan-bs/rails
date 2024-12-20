@@ -22,7 +22,7 @@ module ActiveRecord
           end
 
           collector = collector()
-          puts "[rails : database_statements : to_sql_and_binds] AREL: #{arel_or_sql_string.str}"
+          puts "[rails : database_statements : to_sql_and_binds] AREL: #{arel_or_sql_string.inspect}"
           puts "[rails : database_statements : binds] binds: #{binds}"
           
           if prepared_statements
